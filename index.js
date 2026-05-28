@@ -1,116 +1,93 @@
+/* ═══════════════════════════════════════════
+   VIXOMEDIA — index.js
+   ═══════════════════════════════════════════ */
+
+/* ── Firmas ─────────────────────────────────── */
 const firmas = [
-      { canvasId: 'canvas1', wrapperId: 'wrapper1', estadoId: 'estado1', indId: 'ind1' },
-      { canvasId: 'canvas2', wrapperId: 'wrapper2', estadoId: 'estado2', indId: 'ind2' },
-    ];
+  { canvasId: 'canvas1', wrapperId: 'wrapper1', estadoId: 'estado1' },
+  { canvasId: 'canvas2', wrapperId: 'wrapper2', estadoId: 'estado2' },
+];
 
-    firmas.forEach(({ canvasId, wrapperId, estadoId, indId }) => {
-      iniciarFirma(canvasId, wrapperId, estadoId, indId);
-    });
+firmas.forEach(({ canvasId, wrapperId, estadoId }) => {
+  iniciarFirma(canvasId, wrapperId, estadoId);
+});
 
-    function iniciarFirma(canvasId, wrapperId, estadoId, indId) {
-      const canvas  = document.getElementById(canvasId);
-      const wrapper = document.getElementById(wrapperId);
-      const ctx     = canvas.getContext('2d');
+function iniciarFirma(canvasId, wrapperId, estadoId) {
+  const canvas  = document.getElementById(canvasId);
+  const ctx     = canvas.getContext('2d');
 
-      // Ajustar resolución real del canvas al tamaño CSS
-      function ajustarTamano() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width  = rect.width  * window.devicePixelRatio;
-        canvas.height = rect.height * window.devicePixelRatio;
-        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-        ctx.strokeStyle = '#1a1a2e';
-        ctx.lineWidth   = 2;
-        ctx.lineCap     = 'round';
-        ctx.lineJoin    = 'round';
-      }
-      ajustarTamano();
-      window.addEventListener('resize', ajustarTamano);
+  function ajustarTamano() {
+    const rect  = canvas.getBoundingClientRect();
+    const dpr   = window.devicePixelRatio || 1;
+    canvas.width  = rect.width  * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#1a1a2e';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+  }
+  ajustarTamano();
+  window.addEventListener('resize', ajustarTamano);
 
-      let dibujando = false;
-      let firmado   = false;
+  let dibujando = false;
 
-      function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const src  = e.touches ? e.touches[0] : e;
-        return {
-          x: src.clientX - rect.left,
-          y: src.clientY - rect.top,
-        };
-      }
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src  = e.touches ? e.touches[0] : e;
+    return {
+      x: src.clientX - rect.left,
+      y: src.clientY - rect.top,
+    };
+  }
 
-      function iniciar(e) {
-        e.preventDefault();
-        dibujando = true;
-        const { x, y } = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      }
+  function iniciar(e) {
+    e.preventDefault();
+    dibujando = true;
+    const { x, y } = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
 
-      function dibujar(e) {
-        if (!dibujando) return;
-        e.preventDefault();
-        const { x, y } = getPos(e);
-        ctx.lineTo(x, y);
-        ctx.stroke();
+  function dibujar(e) {
+    if (!dibujando) return;
+    e.preventDefault();
+    const { x, y } = getPos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
 
-        
-      }
+  function terminar() { dibujando = false; }
 
-      function terminar() { dibujando = false; }
+  canvas.addEventListener('mousedown',  iniciar);
+  canvas.addEventListener('mousemove',  dibujar);
+  canvas.addEventListener('mouseup',    terminar);
+  canvas.addEventListener('mouseleave', terminar);
 
-      // Mouse
-      canvas.addEventListener('mousedown',  iniciar);
-      canvas.addEventListener('mousemove',  dibujar);
-      canvas.addEventListener('mouseup',    terminar);
-      canvas.addEventListener('mouseleave', terminar);
+  canvas.addEventListener('touchstart', iniciar,  { passive: false });
+  canvas.addEventListener('touchmove',  dibujar,  { passive: false });
+  canvas.addEventListener('touchend',   terminar);
+}
 
-      // Touch (móvil)
-      canvas.addEventListener('touchstart', iniciar,   { passive: false });
-      canvas.addEventListener('touchmove',  dibujar,   { passive: false });
-      canvas.addEventListener('touchend',   terminar);
-    }
+/* ── Limpiar canvas ──────────────────────────── */
+function limpiar(canvasId, wrapperId, estadoId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx    = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById(wrapperId).classList.remove('signed');
+}
 
-    // ─── Limpiar canvas ───────────────────────────────────────────────────────
-    function limpiar(canvasId, wrapperId, estadoId) {
-      const canvas  = document.getElementById(canvasId);
-      const ctx     = canvas.getContext('2d');
-      const rect    = canvas.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width * window.devicePixelRatio, rect.height * window.devicePixelRatio);
-      document.getElementById(wrapperId).classList.remove('signed');
-      
-    }
+/* ── Descargar firma ─────────────────────────── */
+function descargar(canvasId, nombre) {
+  const canvas = document.getElementById(canvasId);
+  const link   = document.createElement('a');
+  link.download = nombre + '.png';
+  link.href     = canvas.toDataURL('image/png');
+  link.click();
+}
 
-    // ─── Descargar firma como imagen ──────────────────────────────────────────
-    function descargar(canvasId, nombre) {
-      const canvas = document.getElementById(canvasId);
-      const link   = document.createElement('a');
-      link.download = nombre + '.png';
-      link.href     = canvas.toDataURL('image/png');
-      link.click();
-    }
-
-    // ─── Obtener base64 de una firma (para enviar al servidor) ────────────────
-    function obtenerBase64(canvasId) {
-      return document.getElementById(canvasId).toDataURL('image/png');
-    }
-
-    // ─── Enviar / guardar ─────────────────────────────────────────────────────
-    function enviar() {
-      const firma1 = obtenerBase64('canvas1');
-      const firma2 = obtenerBase64('canvas2');
-
-      // Aquí puedes hacer un fetch/POST a tu servidor:
-      // fetch('/guardar-firmas', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ firma1, firma2 })
-      // });
-
-      // Demo: solo mostramos confirmación
-      alert('✅ Documento firmado correctamente.\n\nEn producción, las firmas se enviarían al servidor como imágenes Base64.'); 
-    }   
-
-   function mostrarFotos(input) {
+/* ── Fotos ───────────────────────────────────── */
+function mostrarFotos(input) {
   const preview = document.getElementById('fotoPreview');
   preview.innerHTML = '';
 
@@ -123,210 +100,135 @@ const firmas = [
     reader.onload = () => {
       const container = document.createElement('div');
       container.className = 'foto-card';
-
-      // Cada imagen genera su propio input usando el índice
       container.innerHTML = `
         <img src="${reader.result}" alt="${file.name}">
         <p>${file.name}</p>
-        <input 
-          type="text" 
-          id="descripcion_${index}" 
+        <input
+          type="text"
+          id="descripcion_${index}"
           name="descripcion_${index}"
-          class="w3-input" 
+          class="w3-input"
           placeholder="Descripción de la foto ${index + 1}"
         >
       `;
-
       preview.appendChild(container);
     };
-
     reader.readAsDataURL(file);
   });
 }
 
-    function tenicos() {
-  const filaBoton = document.getElementById("fila-tecnicos");
-  
-  const nuevaFila = document.createElement("tr");
+/* ── Agregar técnico ─────────────────────────── */
+function tenicos() {
+  const filaBoton = document.getElementById('fila-tecnicos');
+
+  const nuevaFila = document.createElement('tr');
   nuevaFila.innerHTML = `
     <td colspan="3"></td>
-    <td class="w3-center">Técnico:</td>
+    <td class="label-cell">Técnico:</td>
     <td>
-      <div style="display:flex; gap:6px; align-items:center;">
-       <textarea class="w3-input" rows="3" placeholder="Tencnicos....." 
-          style="resize:vertical; width:100%;"></textarea>
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
+      <div class="fila-accion">
+        <textarea class="w3-input" rows="2" placeholder="Técnicos..."></textarea>
+        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()" title="Eliminar">✕</button>
       </div>
     </td>
   `;
-
-  // Insertar ANTES de la fila del botón
   filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
 }
 
- function descripcion() {
-  const filaBoton = document.getElementById("fila-descripcion");
+/* ── Agregar descripción ─────────────────────── */
+function descripcion() {
+  const filaBoton = document.getElementById('fila-descripcion');
 
-  const nuevaFila = document.createElement("tr");
+  const nuevaFila = document.createElement('tr');
   nuevaFila.innerHTML = `
     <td>
-      <div style="display:flex; gap:6px; align-items:center;">
-         <textarea class="w3-input" rows="3" placeholder="Descripción del trabajo..." 
-          style="resize:vertical; width:100%;"></textarea>
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
+      <div class="fila-accion">
+        <textarea class="w3-input" rows="3" placeholder="Descripción del trabajo..."></textarea>
+        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()" title="Eliminar">✕</button>
       </div>
     </td>
   `;
-
-  // Inserta ANTES del botón → las descripciones quedan entre el título y el botón
   filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
 }
-    function materiales() {
-  const filaBoton = document.getElementById("fila-materiales");
 
-  const nuevaFila = document.createElement("tr");
+/* ── Agregar materiales ──────────────────────── */
+function materiales() {
+  const filaBoton = document.getElementById('fila-materiales');
+
+  const nuevaFila = document.createElement('tr');
   nuevaFila.innerHTML = `
-    <td><input class="w3-input" type="number" min="0" placeholder="0" style="width:70px;"></td>
-    <td><input class="w3-input" type="text" placeholder="Servicio o equipo"></td>
-    <td><input class="w3-input" type="text" placeholder="Marca"></td>
-    <td><input class="w3-input" type="text" placeholder="Modelo"></td>
+    <td><input class="w3-input" type="number" min="0" placeholder="0" style="width:60px;min-width:50px;"></td>
+    <td><input class="w3-input" type="text"   placeholder="Servicio o equipo"></td>
+    <td><input class="w3-input" type="text"   placeholder="Marca"></td>
+    <td><input class="w3-input" type="text"   placeholder="Modelo"></td>
     <td>
-      <div style="display:flex; gap:6px; align-items:center;">
+      <div class="fila-accion">
         <input class="w3-input" type="text" placeholder="Área de instalación">
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
+        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()" title="Eliminar">✕</button>
       </div>
     </td>
   `;
-
   filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
 }
 
+/* ── Agregar mano de obra ────────────────────── */
 function manoObra() {
-  const filaBoton = document.getElementById("fila-mano-obra");
+  const filaBoton = document.getElementById('fila-mano-obra');
 
-  const nuevaFila = document.createElement("tr");
+  const nuevaFila = document.createElement('tr');
   nuevaFila.innerHTML = `
-    <td><input class="w3-input" type="number" min="0" placeholder="0" style="width:60px;"></td>
-    <td><input class="w3-input" type="text" placeholder="Días"></td>
-    <td><input class="w3-input" type="text" placeholder="Diurno / Nocturno"></td>
-    <td><input class="w3-input" type="number" placeholder=" $ Misceláneos"></td>
-    <td><input class="w3-input" type="text" placeholder="Área de instalación"></td>
+    <td><input class="w3-input" type="number" min="0" placeholder="0"  style="width:60px;min-width:50px;"></td>
+    <td><input class="w3-input" type="text"   placeholder="Días"></td>
+    <td><input class="w3-input" type="text"   placeholder="Diurno / Nocturno"></td>
+    <td><input class="w3-input" type="number" placeholder="$ Misc."></td>
+    <td><input class="w3-input" type="text"   placeholder="Área"></td>
     <td>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <input class="w3-input" type="text" placeholder="Caseta, gasolina, etc.">
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
+      <div class="fila-accion">
+        <input class="w3-input" type="text" placeholder="Caseta, gasolina...">
+        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()" title="Eliminar">✕</button>
       </div>
     </td>
   `;
-
   filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
 }
 
+/* ── Agregar misceláneos ─────────────────────── */
 function miscelaneos() {
-  const filaBoton = document.getElementById("fila-miscelaneos");
+  const filaBoton = document.getElementById('fila-miscelaneos');
 
-  const nuevaFila = document.createElement("tr");
+  const nuevaFila = document.createElement('tr');
   nuevaFila.innerHTML = `
-    <td><input class="w3-input" type="text" placeholder="Concepto (ej. herramienta, consumible...)"></td>
+    <td><input class="w3-input" type="text" placeholder="Concepto..."></td>
     <td>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <textarea class="w3-input" rows="2" placeholder="Descripción detallada..."
-          style="resize:vertical; width:100%;"></textarea>
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
+      <div class="fila-accion">
+        <textarea class="w3-input" rows="2" placeholder="Descripción detallada..."></textarea>
+        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()" title="Eliminar">✕</button>
       </div>
     </td>
   `;
-
   filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
 }
-    
-    function conclusion() {
-      const filaBoton = document.getElementById("fila-conclusion");
 
-  const nuevaFila = document.createElement("tr");
-  nuevaFila.innerHTML = `
-    <td>
-      <div style="display:flex; gap:6px; align-items:center;">
-         <textarea class="w3-input" rows="3" placeholder="Descripción del trabajo..." 
-          style="resize:vertical; width:100%;"></textarea>
-        <button class="w3-button w3-red w3-round" onclick="this.closest('tr').remove()">✕</button>
-      </div>
-    </td>
-  `;
-
-  // Inserta ANTES del botón → las descripciones quedan entre el título y el botón
-  filaBoton.parentNode.insertBefore(nuevaFila, filaBoton);
-    }
-
-    
-
-
-   /* function imprimir() {
-  // Guardar valores de inputs y textareas antes de imprimir
-  // (algunos navegadores los pierden al restaurar)
+/* ── Imprimir / Descargar PDF ────────────────── */
+function imprimir() {
   const valores = [];
   document.querySelectorAll('input, textarea').forEach(el => {
     valores.push({ el, value: el.value });
   });
 
-  window.print();
-
-  // Restaurar valores por si el navegador los resetea
-  setTimeout(() => {
-    valores.forEach(({ el, value }) => { el.value = value; });
-  }, 500);
-} */
-/*function imprimir() {
-  // Guardar valores de inputs y textareas antes de imprimir
-  const valores = [];
-  document.querySelectorAll('input, textarea').forEach(el => {
-    valores.push({ el, value: el.value });
-  });
-
-  // --- NOMBRE DEL PDF ---
-  // Cambia estos IDs por los de tus campos
-  const campo1 = document.getElementById('num-reporte')?.value.trim() || '';
-  const campo2 = document.getElementById('num-cotizacion')?.value.trim() || '';
-  const campo3 = document.getElementById('fecha_llenado')?.value.trim() || '';
-
-  const partes = [campo1, campo2, campo3].filter(Boolean);
-  const nombreArchivo = partes.length > 0
-    ? partes.join('_').replace(/\s+/g, '_')
-    : 'Reporte';
-
-  const tituloOriginal = document.title;
-  document.title = nombreArchivo;
-  // ----------------------
-
-  window.print();
-
-  // Restaurar título e inputs
-  setTimeout(() => {
-    document.title = tituloOriginal;
-    valores.forEach(({ el, value }) => { el.value = value; });
-  }, 1000);
-} */
-
-  function imprimir() {
-  const valores = [];
-  document.querySelectorAll('input, textarea').forEach(el => {
-    valores.push({ el, value: el.value });
-  });
-
-  const campo1 = document.getElementById('num-reporte')?.value.trim() || '';
-  const campo2 = document.getElementById('num-cotizacion')?.value.trim() || '';
+  const campo1   = document.getElementById('num-reporte')?.value.trim() || '';
   const fechaRaw = document.getElementById('fecha_llenado')?.value || '';
-  const campo3 = fechaRaw ? fechaRaw.split('-').reverse().join('-') : '';
+  const campo3   = fechaRaw ? fechaRaw.split('-').reverse().join('-') : '';
 
-  const partes = [campo1, campo2, campo3].filter(Boolean);
+  const partes       = [campo1, campo3].filter(Boolean);
   const nombreArchivo = partes.length > 0
     ? partes.join('_').replace(/\s+/g, '_')
-    : 'Reporte';
+    : 'Reporte_Vixomedia';
 
   const tituloOriginal = document.title;
   document.title = nombreArchivo;
 
-  setTimeout(() => {          // ← espera 200ms antes de abrir el diálogo
+  setTimeout(() => {
     window.print();
     setTimeout(() => {
       document.title = tituloOriginal;
