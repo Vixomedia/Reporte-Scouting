@@ -17,6 +17,7 @@
     <div class="logo-wrapper">
       <img src="vixomedia.jpg" alt="Vixomedia" class="w3-round w3-image">
     </div>
+    
     <div class="folio-form">
       <label for="num-reporte">Folio:</label>
       <input id="num-reporte" class="w3-input" type="number" placeholder="0000">
@@ -175,18 +176,6 @@
 
   <!-- ── Firmas ─────────────────────────────────────── -->
   <div class="firmas-row">
-    <div class="firma-col">
-      <p class="firma-titulo">Firma del cliente</p>
-      <div class="canvas-wrapper" id="wrapper1">
-        <canvas id="canvas1"></canvas>
-        <div class="linea-firma"></div>
-      </div>
-      <div class="acciones">
-        <button class="btn-limpiar" onclick="limpiar('canvas1','wrapper1','estado1')">Limpiar</button>
-        <button class="btn-guardar" onclick="descargar('canvas1','firma-cliente')">Descargar</button>
-      </div>
-      <p class="estado" id="estado1">Cliente</p>
-    </div>
 
     <div class="firma-col">
       <p class="firma-titulo">Firma Vixomedia</p>
@@ -198,7 +187,7 @@
         <button class="btn-limpiar" onclick="limpiar('canvas2','wrapper2','estado2')">Limpiar</button>
         <button class="btn-guardar" onclick="descargar('canvas2','firma-proveedor')">Descargar</button>
       </div>
-      <p class="estado" id="estado2">Vixomedia</p>
+      <p class="estado" id="estado2"><input class="w3-input" type="text" placeholder="Nombre de quien llena el reporte" /></p>
     </div>
   </div>
 
