@@ -17,146 +17,163 @@
     <div class="logo-wrapper">
       <img src="vixomedia.jpg" alt="Vixomedia" class="w3-round w3-image">
     </div>
-
-    <div class="w3-container folio-form">
-      <p>
-        <label>Folio:</label>
-        <input id="num-reporte" class="w3-input" type="number" placeholder="0000">
-      </p>
-      
+    <div class="folio-form">
+      <label for="num-reporte">Folio:</label>
+      <input id="num-reporte" class="w3-input" type="number" placeholder="0000">
     </div>
   </div>
 
   <!-- ── Datos del cliente ─────────────────────────── -->
   <div class="tabla-scroll">
     <table id="tabla1" class="w3-table w3-striped w3-hoverable w3-white">
-      <tr>
-        <td id = "fecha" class="w3-center">Fecha de llenado:</td>
-        <td><input id="fecha_llenado" class="w3-input" type="date"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="w3-center">Cliente:</td>
-        <td><input class="w3-input" type="text"></td>
-        <td></td>
-        <td class="w3-center">Teléfono:</td>
-        <!-- FIX 2: Teléfono limitado a 10 dígitos -->
-        <td><input class="w3-input" type="tel" maxlength="10" placeholder="10 dígitos"
-                   oninput="this.value = this.value.replace(/\D/g,'').slice(0,10)"></td>
-      </tr>
-      <tr>
-        <td class="w3-center">Solicita:</td>
-        <td><input class="w3-input" type="text"></td>
-        <td></td>
-        <td class="w3-center">Correo:</td>
-        <td><input class="w3-input" type="email"></td>
-      </tr>
-      <tr id="fila-tecnicos">
-        <td class="w3-center">Contacto:</td>
-        <td><input class="w3-input" type="text"></td>
-        <td></td>
-        <td class="w3-center oculto">Técnico(s):</td>
-        <td class="w3-center">
-          <button onclick="tenicos()" class="w3-button w3-green w3-round">+ Agregar técnico(s)</button>
-        </td>
-      </tr>
-      <tr>
-        <td class="w3-center">Dirección:</td>
-        <td colspan="4"><input class="w3-input g" type="text"></td>
-      </tr>
-      <tr>
-        <td class="w3-center">Celular:</td>
-        <!-- FIX 3: Celular también limitado a 10 dígitos -->
-        <td><input class="w3-input" type="tel" maxlength="10" placeholder="10 dígitos"
-                   oninput="this.value = this.value.replace(/\D/g,'').slice(0,10)"></td>
-        <td></td>
-        <td class="w3-center">Horarios:</td>
-        <td><input class="w3-input" type="date"></td>
-      </tr>
+      <tbody>
+        <tr>
+          <td class="label-cell">Fecha de llenado:</td>
+          <td colspan="2"><input id="fecha_llenado" class="w3-input" type="date"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Cliente:</td>
+          <td><input class="w3-input" type="text" placeholder="Nombre del cliente"></td>
+          <td class="sub-table">
+            <div class="sub-row">
+              <span class="label-cell sub-label">Teléfono:</span>
+              <input class="w3-input" type="tel" maxlength="10" placeholder="10 dígitos"
+                     oninput="this.value = this.value.replace(/\D/g,'').slice(0,10)">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Solicita:</td>
+          <td><input class="w3-input" type="text" placeholder="¿Qué solicita?"></td>
+          <td class="sub-table">
+            <div class="sub-row">
+              <span class="label-cell sub-label">Correo:</span>
+              <input class="w3-input" type="email" placeholder="correo@ejemplo.com">
+            </div>
+          </td>
+        </tr>
+        <tr id="fila-tecnicos">
+          <td class="label-cell">Contacto:</td>
+          <td><input class="w3-input" type="text" placeholder="Nombre del contacto"></td>
+          <td class="sub-table">
+            <div class="sub-row">
+              <span class="label-cell sub-label oculto">Técnico(s):</span>
+              <button onclick="tenicos()" class="w3-button w3-green w3-round btn-agregar">+ Agregar técnico(s)</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="label-cell">Dirección:</td>
+          <td colspan="2"><input class="w3-input" type="text" placeholder="Dirección completa"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Celular:</td>
+          <td>
+            <input class="w3-input" type="tel" maxlength="10" placeholder="10 dígitos"
+                   oninput="this.value = this.value.replace(/\D/g,'').slice(0,10)">
+          </td>
+          <td class="sub-table">
+            <div class="sub-row">
+              <span class="label-cell sub-label">Horarios:</span>
+              <input class="w3-input" type="date">
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
   <!-- ── Descripción del trabajo ───────────────────── -->
   <table class="w3-table w3-striped w3-hoverable w3-white">
-    <tr>
-      <td class="w3-center"><strong>Descripción del trabajo:</strong></td>
-    </tr>
-    <tr id="fila-descripcion">
-      <td class="w3-center">
-        <button onclick="descripcion()" class="w3-button w3-green w3-round">+ Agregar descripción</button>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td class="w3-center"><strong>Descripción del trabajo:</strong></td>
+      </tr>
+      <tr id="fila-descripcion">
+        <td class="w3-center">
+          <button onclick="descripcion()" class="w3-button w3-green w3-round btn-agregar">+ Agregar descripción</button>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
   <!-- ── Equipos y materiales ──────────────────────── -->
   <div class="tabla-scroll">
     <table id="tabla-materiales" class="w3-table w3-bordered w3-striped w3-hoverable w3-white">
-      <tr>
-        <td colspan="5" class="w3-center"><strong>Equipos y materiales instalados</strong></td>
-      </tr>
-      <tr class="w3-light-grey">
-        <td class="w3-center"><strong>Cant</strong></td>
-         <td class="w3-center"><strong>Servicio o equipo</strong></td>
-        <td class="w3-center"><strong>Marca</strong></td>
-        <td class="w3-center"><strong>Modelo</strong></td>
-        <td class="w3-center"><strong>Area de instalación</strong></td>
-      </tr>
-      <tr id="fila-materiales">
-        <td colspan="5" class="w3-center">
-          <button onclick="materiales()" class="w3-button w3-green w3-round">+ Agregar materiales</button>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <td colspan="5" class="w3-center"><strong>Equipos y materiales instalados</strong></td>
+        </tr>
+        <tr class="w3-light-grey">
+          <td class="w3-center col-cant"><strong>Cant</strong></td>
+          <td class="w3-center"><strong>Servicio o equipo</strong></td>
+          <td class="w3-center"><strong>Marca</strong></td>
+          <td class="w3-center"><strong>Modelo</strong></td>
+          <td class="w3-center"><strong>Área de instalación</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="fila-materiales">
+          <td colspan="5" class="w3-center">
+            <button onclick="materiales()" class="w3-button w3-green w3-round btn-agregar">+ Agregar materiales</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
-  <!-- ── Mano de obra y viáticos ────────────────────────────────── -->
+  <!-- ── Mano de obra y viáticos ────────────────────── -->
   <div class="tabla-scroll">
     <table id="tabla-mano-obra" class="w3-table w3-bordered w3-striped w3-hoverable w3-white">
-      <tr>
-        <td colspan="6" class="w3-center"><strong>Mano de obra y viáticos</strong></td>
-      </tr>
-      <tr class="w3-light-grey">
-        <td class="w3-center"><strong>Personas</strong></td>
-         <td class="w3-center"><strong>Dias</strong></td>
-        <td class="w3-center"><strong>Turno (Diurno/Nocturno)</strong></td>
-        <td class="w3-center"><strong>Miscelaneos</strong></td>
-        <td class="w3-center"><strong>Area de instalación</strong></td>
-        <td class="w3-center"><strong>Traslado
-          (Caseta,gasolina,etc.)
-        </strong></td>
-      </tr>
-      <tr id="fila-mano-obra">
-        <td colspan="6" class="w3-center">
-          <button onclick="manoObra()" class="w3-button w3-green w3-round">+ Agregar mano de obra</button>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <td colspan="6" class="w3-center"><strong>Mano de obra y viáticos</strong></td>
+        </tr>
+        <tr class="w3-light-grey">
+          <td class="w3-center"><strong>Personas</strong></td>
+          <td class="w3-center"><strong>Días</strong></td>
+          <td class="w3-center"><strong>Turno</strong></td>
+          <td class="w3-center"><strong>Misceláneos</strong></td>
+          <td class="w3-center"><strong>Área</strong></td>
+          <td class="w3-center"><strong>Traslado</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="fila-mano-obra">
+          <td colspan="6" class="w3-center">
+            <button onclick="manoObra()" class="w3-button w3-green w3-round btn-agregar">+ Agregar mano de obra</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
   <!-- ── Descripción de misceláneos ─────────────────── -->
-<div class="tabla-scroll">
-  <table id="tabla-miscelaneos" class="w3-table w3-bordered w3-striped w3-hoverable w3-white">
-    <tr>
-      <td colspan="2" class="w3-center"><strong>Descripción de misceláneos</strong></td>
-    </tr>
-    <tr class="w3-light-grey">
-      <td class="w3-center"><strong>Concepto</strong></td>
-      <td class="w3-center"><strong>Descripción</strong></td>
-    </tr>
-    <tr id="fila-miscelaneos">
-      <td colspan="2" class="w3-center">
-        <button onclick="miscelaneos()" class="w3-button w3-green w3-round">+ Agregar misceláneos</button>
-      </td>
-    </tr>
-  </table>
-</div>
+  <div class="tabla-scroll">
+    <table id="tabla-miscelaneos" class="w3-table w3-bordered w3-striped w3-hoverable w3-white">
+      <thead>
+        <tr>
+          <td colspan="2" class="w3-center"><strong>Descripción de misceláneos</strong></td>
+        </tr>
+        <tr class="w3-light-grey">
+          <td class="w3-center col-concepto"><strong>Concepto</strong></td>
+          <td class="w3-center"><strong>Descripción</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="fila-miscelaneos">
+          <td colspan="2" class="w3-center">
+            <button onclick="miscelaneos()" class="w3-button w3-green w3-round btn-agregar">+ Agregar misceláneos</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- ── Firmas ─────────────────────────────────────── -->
   <div class="firmas-row">
-    <!-- Firma cliente -->
     <div class="firma-col">
+      <p class="firma-titulo">Firma del cliente</p>
       <div class="canvas-wrapper" id="wrapper1">
         <canvas id="canvas1"></canvas>
         <div class="linea-firma"></div>
@@ -168,8 +185,8 @@
       <p class="estado" id="estado1">Cliente</p>
     </div>
 
-    <!-- Firma Vixomedia -->
     <div class="firma-col">
+      <p class="firma-titulo">Firma Vixomedia</p>
       <div class="canvas-wrapper" id="wrapper2">
         <canvas id="canvas2"></canvas>
         <div class="linea-firma"></div>
@@ -184,26 +201,30 @@
 
   <!-- ── Evidencia fotográfica ─────────────────────── -->
   <table class="w3-table w3-striped w3-hoverable w3-white">
-    <tr>
-      <td class="w3-center"><strong>Evidencia fotográfica</strong></td>
-    </tr>
-    <tr>
-      <td>
-        <p class="no_print">Sube las fotografías aquí. Puedes seleccionar varias imágenes y se mostrarán en un tamaño cómodo.</p>
-        <input id="fotoInput" class="w3-input" type="file" accept="image/*" multiple onchange="mostrarFotos(this)">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div id="fotoPreview" class="foto-preview"></div>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td class="w3-center"><strong>Evidencia fotográfica</strong></td>
+      </tr>
+      <tr>
+        <td>
+          <p class="no_print aviso-foto">Sube las fotografías aquí. Puedes seleccionar varias imágenes.</p>
+          <label class="btn-foto no_print" for="fotoInput">
+            <span>📷 Seleccionar imágenes</span>
+            <input id="fotoInput" type="file" accept="image/*" multiple onchange="mostrarFotos(this)">
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div id="fotoPreview" class="foto-preview"></div>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
   <!-- ── Botón imprimir ──────────────────────── -->
-  <div style="text-align:center; margin: 20px 0;">
-    <button onclick="imprimir()" class="w3-button w3-round"
-      style="background:#1a1a2e; color:#fff; padding:12px 36px; font-size:1rem; letter-spacing:.5px;">
+  <div class="btn-imprimir-wrapper no_print">
+    <button onclick="imprimir()" class="btn-imprimir">
       ⬇ Descargar PDF
     </button>
   </div>
