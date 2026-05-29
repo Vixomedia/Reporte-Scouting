@@ -4,7 +4,6 @@
 
 /* ── Firmas ─────────────────────────────────── */
 const firmas = [
-  { canvasId: 'canvas1', wrapperId: 'wrapper1', estadoId: 'estado1' },
   { canvasId: 'canvas2', wrapperId: 'wrapper2', estadoId: 'estado2' },
 ];
 
@@ -13,60 +12,99 @@ firmas.forEach(({ canvasId, wrapperId, estadoId }) => {
 });
 
 function iniciarFirma(canvasId, wrapperId, estadoId) {
-  const canvas  = document.getElementById(canvasId);
-  const ctx     = canvas.getContext('2d');
+
+  const canvas = document.getElementById(canvasId);
+
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
 
   function ajustarTamano() {
-    const rect  = canvas.getBoundingClientRect();
-    const dpr   = window.devicePixelRatio || 1;
-    canvas.width  = rect.width  * dpr;
+
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    // Guardar dibujo actual
+    const temp = document.createElement('canvas');
+    temp.width = canvas.width;
+    temp.height = canvas.height;
+
+    const tempCtx = temp.getContext('2d');
+    tempCtx.drawImage(canvas, 0, 0);
+
+    // Resetear transformaciones
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
+
     ctx.scale(dpr, dpr);
+
     ctx.strokeStyle = '#1a1a2e';
-    ctx.lineWidth   = 2;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Restaurar dibujo
+    ctx.drawImage(temp, 0, 0, rect.width, rect.height);
   }
+
   ajustarTamano();
+
   window.addEventListener('resize', ajustarTamano);
 
   let dibujando = false;
 
   function getPos(e) {
+
     const rect = canvas.getBoundingClientRect();
-    const src  = e.touches ? e.touches[0] : e;
+
+    const src = e.touches ? e.touches[0] : e;
+
     return {
       x: src.clientX - rect.left,
-      y: src.clientY - rect.top,
+      y: src.clientY - rect.top
     };
   }
 
   function iniciar(e) {
+
     e.preventDefault();
+
     dibujando = true;
+
     const { x, y } = getPos(e);
+
     ctx.beginPath();
     ctx.moveTo(x, y);
   }
 
   function dibujar(e) {
+
     if (!dibujando) return;
+
     e.preventDefault();
+
     const { x, y } = getPos(e);
+
     ctx.lineTo(x, y);
     ctx.stroke();
   }
 
-  function terminar() { dibujando = false; }
+  function terminar() {
+    dibujando = false;
+  }
 
-  canvas.addEventListener('mousedown',  iniciar);
-  canvas.addEventListener('mousemove',  dibujar);
-  canvas.addEventListener('mouseup',    terminar);
+  // Mouse
+  canvas.addEventListener('mousedown', iniciar);
+  canvas.addEventListener('mousemove', dibujar);
+  canvas.addEventListener('mouseup', terminar);
   canvas.addEventListener('mouseleave', terminar);
 
-  canvas.addEventListener('touchstart', iniciar,  { passive: false });
-  canvas.addEventListener('touchmove',  dibujar,  { passive: false });
-  canvas.addEventListener('touchend',   terminar);
+  // Touch
+  canvas.addEventListener('touchstart', iniciar, { passive: false });
+  canvas.addEventListener('touchmove', dibujar, { passive: false });
+  canvas.addEventListener('touchend', terminar);
 }
 
 /* ── Limpiar canvas ──────────────────────────── */
